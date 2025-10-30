@@ -468,14 +468,23 @@ document.getElementById('close-register').addEventListener('click', function(){
   }, 300);
 });
 
-// WhatsApp submission
-document.getElementById('register-form').addEventListener('submit', function(e){
-  e.preventDefault();
-  const form = e.target;
-  const msg = `Scientrix Registration:%0AFull Name: ${form.name.value}%0ADOB: ${form.dob.value}%0AGender: ${form.gender.value}%0AContact: ${form.contact.value}%0AEmail: ${form.email.value}%0AWhatsApp: ${form.whatsapp.value}%0AAddress: ${form.address.value}`;
-  const waURL = `https://wa.me/918217575558?text=${msg}`;
-  window.open(waURL, '_blank');
-});
+  // WhatsApp submission (fixed)
+  document.getElementById('register-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    const f = e.target;
+    const msg = `*Scientrix Registration*%0A
+  *School:* ${f.school_name.value}%0A
+  *Participant 1:* ${f.participant1.value}%0A
+  *Participant 2:* ${f.participant2.value || 'N/A'}%0A
+  *Participant 3:* ${f.participant3.value || 'N/A'}%0A
+  *Registrant Name:* ${f.registrant_name.value}%0A
+  *Registrant Contact:* ${f.registrant_contact.value}%0A
+  *Participant Contact:* ${f.participant_contact.value}%0A
+  *Emails:*%0A 1️⃣ ${f.email1.value}%0A 2️⃣ ${f.email2.value || 'N/A'}%0A 3️⃣ ${f.email3.value || 'N/A'}`;
+
+    const waURL = `https://wa.me/918217575558?text=${encodeURIComponent(msg)}`;
+    window.open(waURL, '_blank');
+  });
 </script>
 </body>
 </html>
