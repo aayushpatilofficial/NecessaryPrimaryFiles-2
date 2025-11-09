@@ -3,242 +3,550 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Scientrix — Ultra Glass Edition</title>
-<meta name="description" content="Scientrix — Sustainable Futures. Organized by Little Scholars' Academy. Ultra-realistic glass UI." />
+<title>Scientrix — Sustainable Futures</title>
+<meta name="description" content="Scientrix — Sustainable Futures. Organized by Little Scholars' Academy." />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
-:root{
-  --bg-1:#071021;
-  --bg-2:#04101a;
-  --glass-1:rgba(255,255,255,0.04);
-  --glass-2:rgba(255,255,255,0.02);
-  --accent:#00e5c4;
-  --accent-2:#00a3ff;
-  --muted:rgba(230,238,246,0.7);
-  --glass-border: rgba(255,255,255,0.06);
-  --maxw:1200px;
-  --radius:16px
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{
-  height:100%;
-  background:radial-gradient(1200px 600px at 10% 10%, rgba(0,160,255,0.06), transparent 10%),
-            radial-gradient(1000px 500px at 90% 90%, rgba(0,230,196,0.04), transparent 15%),
-            linear-gradient(180deg,var(--bg-1) 0%,var(--bg-2) 100%);
-  color:#e6eef6;
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;
-  position:relative;
-}
-a{color:inherit;text-decoration:none}
-.wrap{max-width:var(--maxw);margin:36px auto;padding:28px}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-/* Desktop Navigation (Original) */
-.nav{
-  position:fixed;
-  left:50%;
-  transform:translateX(-50%);
-  top:18px;
-  z-index:60;
-  backdrop-filter:blur(8px);
-  background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.018));
-  border:1px solid var(--glass-border);
-  padding:10px 16px;
-  border-radius:999px;
-  display:flex;
-  gap:12px;
-  align-items:center;
-  box-shadow:0 6px 30px rgba(5,10,20,0.6)
+:root{
+  --bg:#ffffff;
+  --surface:#f8f9fa;
+  --border:#e0e4e8;
+  --text:#1a1d23;
+  --text-muted:#6b7280;
+  --accent:#0066ff;
+  --accent-hover:#0052cc;
+  --success:#10b981;
+  --warning:#f59e0b;
+  --danger:#ef4444;
+  --maxw:1200px;
 }
-.nav .brand{display:flex;align-items:center;gap:10px;font-weight:700}
-.logo-mark{
-  width:44px;height:44;
-  border-radius:10px;
+[data-theme="dark"]{
+  --bg:#0a0e1a;
+  --surface:#151925;
+  --border:#1f2937;
+  --text:#f9fafb;
+  --text-muted:#9ca3af;
+  --accent:#3b82f6;
+  --accent-hover:#60a5fa;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  min-height:100vh;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  line-height:1.6;
+  transition:background 0.3s, color 0.3s;
+}
+
+.container{max-width:var(--maxw);margin:0 auto;padding:20px}
+
+.topbar{
+  position:fixed;
+  top:0;left:0;right:0;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  z-index:100;
+  backdrop-filter:blur(8px);
+  background:rgba(255,255,255,0.95);
+}
+[data-theme="dark"] .topbar{background:rgba(10,14,26,0.95)}
+
+.nav{
+  max-width:var(--maxw);
+  margin:0 auto;
+  padding:16px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+.nav-left{display:flex;align-items:center;gap:16px}
+.logo{
+  width:40px;height:40px;
+  background:var(--accent);
+  color:#fff;
   display:grid;
   place-items:center;
   font-weight:800;
-  background:linear-gradient(135deg,var(--accent),var(--accent-2));
-  box-shadow:0 4px 18px rgba(0,160,255,0.12);
-  color:#032
+  border-radius:8px;
+  font-size:1.1rem;
 }
-.nav a{padding:8px 12px;border-radius:10px;font-weight:600;color:var(--muted)}
-.nav a.primary{
-  background:linear-gradient(90deg,var(--accent),var(--accent-2));
-  color:#042;
+.brand-text{font-weight:700;font-size:1.05rem;color:var(--text)}
+.nav-links{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.nav-links a{
   padding:8px 14px;
-  box-shadow:0 6px 24px rgba(0,160,255,0.08)
+  color:var(--text-muted);
+  font-weight:500;
+  border-radius:6px;
+  transition:all 0.2s;
+  font-size:0.95rem;
+  text-decoration:none;
+  cursor:pointer;
 }
-.hero{margin-top:88px;display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:start}
-.glass{
-  border-radius:var(--radius);
-  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border:1px solid var(--glass-border);
-  backdrop-filter: blur(12px) saturate(1.05);
-  box-shadow: 0 14px 50px rgba(3,6,20,0.6);
-  padding:28px;
+.nav-links a:hover{background:var(--surface);color:var(--text)}
+.nav-links a.btn-primary{
+  background:var(--accent);
   color:#fff;
+  font-weight:600;
 }
-.hero-left h1{font-size:2.4rem;letter-spacing:0.4px}
-.eyebrow{color:var(--muted);font-weight:600;margin-bottom:6px}
-.lead{color:var(--muted);margin-top:12px;line-height:1.5}
+.nav-links a.btn-primary:hover{background:var(--accent-hover)}
+
+.theme-toggle{
+  width:40px;height:40px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  border-radius:8px;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  transition:all 0.2s;
+  font-size:1.2rem;
+}
+.theme-toggle:hover{background:var(--bg);border-color:var(--accent)}
+
+.section{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:32px;
+  margin:20px 0;
+}
+
+main{margin-top:80px}
+
+.hero{margin-bottom:24px}
+.hero .eyebrow{
+  color:var(--accent);
+  font-weight:600;
+  font-size:0.9rem;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  margin-bottom:8px;
+}
+.hero h1{
+  font-size:2.8rem;
+  font-weight:800;
+  margin-bottom:12px;
+  line-height:1.1;
+}
+.hero .lead{
+  font-size:1.1rem;
+  color:var(--text-muted);
+  margin-bottom:16px;
+}
 .badge{
+  display:inline-block;
+  padding:8px 16px;
+  background:var(--accent);
+  color:#fff;
+  border-radius:6px;
+  font-weight:600;
+  font-size:0.9rem;
+}
+
+.countdown{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  margin-top:24px;
+}
+.countdown .unit{
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:20px;
+  text-align:center;
+}
+.unit .num{
+  font-size:2.5rem;
+  font-weight:800;
+  color:var(--accent);
+  line-height:1;
+}
+.unit .lbl{
+  font-size:0.85rem;
+  color:var(--text-muted);
+  text-transform:uppercase;
+  letter-spacing:1px;
+  margin-top:8px;
+}
+
+h2{
+  font-size:1.8rem;
+  font-weight:700;
+  margin-bottom:20px;
+  color:var(--text);
+}
+
+.rules-list{list-style:none;padding:0}
+.rules-list li{
+  padding:16px;
+  margin:12px 0;
+  background:var(--bg);
+  border-left:3px solid var(--accent);
+  border-radius:4px;
+}
+.rules-list strong{color:var(--accent);font-weight:600}
+
+.schedule{display:grid;gap:12px;margin-top:20px}
+.schedule-item{
+  display:grid;
+  grid-template-columns:140px 1fr auto;
+  gap:16px;
+  align-items:center;
+  padding:16px 20px;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+  transition:all 0.2s;
+}
+.schedule-item:hover{
+  border-color:var(--accent);
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+.schedule-item .time{font-weight:700;color:var(--accent);font-size:0.95rem}
+.schedule-item .desc{font-weight:500;color:var(--text)}
+.countdown-event{
+  font-size:0.8rem;
+  color:var(--text-muted);
+  padding:6px 12px;
+  background:var(--surface);
+  border-radius:4px;
+  white-space:nowrap;
+  border:1px solid var(--border);
+}
+
+.btn-group{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.btn{
+  padding:12px 24px;
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  font-weight:600;
+  text-decoration:none;
   display:inline-flex;
   align-items:center;
   gap:8px;
-  padding:10px 14px;
-  border-radius:999px;
-  background:linear-gradient(90deg, rgba(0,229,196,0.08), rgba(0,163,255,0.05));
-  border:1px solid rgba(0,160,255,0.06);
-  font-weight:700;
-  color:var(--accent)
+  cursor:pointer;
+  transition:all 0.2s;
+  font-size:0.95rem;
+  justify-content:center;
 }
-.countdown{display:flex;gap:12px;margin-top:18px}
-.countdown .unit{min-width:84px;text-align:center;padding:12px 10px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03)}
-.unit .num{font-size:1.5rem;font-weight:800;color:#fff}
-.unit .lbl{font-size:.8rem;color:var(--muted)}
-.section{margin-top:22px}
-.rules-list{color:var(--muted);padding-left:18px;line-height:1.5;}
-.rules-list li{margin:10px 0}
-.schedule{margin-top:12px;display:grid;gap:10px}
-.schedule-item{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(8px);}
-.schedule-item .time{font-weight:700;color:var(--accent)}
-.schedule-item .desc{color:var(--muted);font-weight:600}
-.contact .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-.wa-btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:linear-gradient(90deg,#25D366,#128C7E);color:white;font-weight:700;border:1px solid rgba(0,0,0,0.12);box-shadow:0 8px 28px rgba(37,211,102,0.08)}
-.group-btn{background:linear-gradient(90deg,#22c55e,#16a34a);}
-.confirm-note{margin-top:14px;padding:16px;border-radius:12px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-left:4px solid var(--accent);color:var(--muted);font-weight:700}
-.confirm-note strong{color:var(--accent)}
-footer{margin-top:40px;text-align:center;color:var(--muted);font-size:0.9rem}
+.btn:hover{background:var(--accent-hover);transform:translateY(-1px)}
+.btn-success{background:var(--success)}
+.btn-success:hover{background:#059669}
 
-/* --- UPDATED MEDIA QUERY FOR NAVIGATION --- */
-@media (max-width: 980px) {
-  .hero {
-    grid-template-columns: 1fr;
-  }
-  .nav {
-    left: 12px;           /* Pin to 12px from left */
-    right: 12px;          /* Pin to 12px from right */
-    top: 14px;
-    transform: none;      /* Remove centering */
-    width: auto;          /* Let browser calculate width */
-    border-radius: 14px;
-    justify-content: space-between; /* Spreads out logo and links */
-  }
+.contact-grid{display:grid;gap:20px;margin-top:20px}
+.contact-item h3{font-size:1.1rem;margin-bottom:12px;font-weight:600}
+.contact-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 20px;
+  background:var(--success);
+  color:#fff;
+  border-radius:8px;
+  font-weight:600;
+  text-decoration:none;
+  transition:all 0.2s;
 }
+.contact-btn:hover{background:#059669;transform:translateY(-1px)}
 
-/* Original media query for smaller screens */
-@media (max-width:560px){
-  .countdown{flex-wrap:wrap}
-  .grid{grid-template-columns:1fr}
+.note{
+  margin-top:20px;
+  padding:16px 20px;
+  background:var(--bg);
+  border-left:4px solid var(--accent);
+  border-radius:4px;
+  color:var(--text-muted);
+}
+.note strong{color:var(--accent)}
 
-  /* Additional fixes for small screens */
-  .wrap {
-    padding: 16px; /* Less padding on phone */
-  }
-  .hero-left h1 {
-    font-size: 2.1rem; /* Smaller heading */
-  }
-  .countdown .unit {
-    min-width: 0; /* Allow countdown units to flex */
-    flex-grow: 1;
-    flex-basis: 0;
-  }
-  .schedule-item {
-    flex-direction: column; /* Stack schedule items */
-    align-items: flex-start;
-    gap: 6px;
-  }
-  
-  /* Fix navigation on mobile to prevent Register button from being cut off */
-  .nav {
-    flex-wrap: wrap;
-    padding: 10px 12px;
-    gap: 8px;
-  }
-  .nav .brand {
-    flex: 1 1 auto;
-    min-width: 0; /* Allow text to shrink */
-  }
-  .nav .brand > div:last-child {
-    font-size: 0.85rem; /* Smaller brand text on mobile */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .nav nav {
-    margin-left: 0 !important;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
-  .nav a {
-    padding: 6px 10px;
-    font-size: 0.9rem;
-  }
-  .nav a.primary {
-    padding: 6px 12px;
-  }
-  
-  /* Add extra top margin on mobile to account for taller wrapped navigation */
-  .wrap {
-    margin-top: 150px; /* More space for wrapped nav on mobile */
-  }
+footer{
+  text-align:center;
+  padding:32px 20px;
+  color:var(--text-muted);
+  font-size:0.9rem;
+  border-top:1px solid var(--border);
+  margin-top:40px;
 }
 
-.reveal{opacity:0;transform:translateY(10px);animation:reveal .7s forwards}
-.reveal.delay-1{animation-delay:.08s}.reveal.delay-2{animation-delay:.16s}.reveal.delay-3{animation-delay:.24s}
-@keyframes reveal{to{opacity:1;transform:none}}
-
-/* Popup overlay */
-#overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(7,16,33,0.7);backdrop-filter:blur(6px);z-index:900;opacity:0;transition:opacity 0.3s;}
-#register-popup input, #register-popup select{
-  width:100%;margin:10px 0;padding:14px;border-radius:16px;border:1px solid rgba(255,255,255,0.06);
-  background:rgba(255,255,255,0.02);color:#fff;font-size:1rem;backdrop-filter:blur(6px);transition:0.2s;
+#overlay{
+  display:none;
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,0.5);
+  z-index:200;
+  opacity:0;
+  transition:opacity 0.3s;
 }
-#register-popup input:focus, #register-popup select:focus{border-color:var(--accent);outline:none}
-#register-popup h2{color:#fff;font-weight:700;margin-bottom:12px}
-#register-popup p.lead{color:var(--muted);margin-bottom:16px}
-#register-popup button{font-weight:700;border:none;cursor:pointer}
+.popup{
+  display:none;
+  position:fixed;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(0.95);
+  z-index:201;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:32px;
+  max-width:600px;
+  width:90%;
+  max-height:85vh;
+  overflow-y:auto;
+  opacity:0;
+  transition:all 0.3s;
+  box-shadow:0 20px 60px rgba(0,0,0,0.3);
+}
+.popup h2{margin-bottom:8px}
+.popup .lead{color:var(--text-muted);margin-bottom:20px;font-size:0.95rem}
+.popup input, .popup select, .popup textarea{
+  width:100%;
+  padding:12px 16px;
+  margin:8px 0;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+  color:var(--text);
+  font-size:0.95rem;
+  font-family:'Inter',sans-serif;
+  transition:border 0.2s;
+}
+.popup input:focus, .popup select:focus, .popup textarea:focus{
+  outline:none;
+  border-color:var(--accent);
+}
+.popup button{width:100%;margin-top:12px}
+.btn-cancel{background:#6b7280}
+.btn-cancel:hover{background:#4b5563}
+
+#welcome-modal{max-width:700px}
+.welcome-content{text-align:center}
+.welcome-icon{
+  font-size:4rem;
+  margin-bottom:16px;
+}
+.welcome-content h1{
+  font-size:2.5rem;
+  margin-bottom:16px;
+  background:linear-gradient(135deg, var(--accent), var(--accent-hover));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.feature-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:16px;
+  margin:24px 0;
+  text-align:left;
+}
+.feature-card{
+  padding:16px;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+}
+.feature-card .icon{font-size:1.8rem;margin-bottom:8px}
+.feature-card h3{font-size:1rem;margin-bottom:4px;font-weight:600}
+.feature-card p{font-size:0.85rem;color:var(--text-muted)}
+
+.check-in-code{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin:16px 0;
+}
+.check-in-code input{flex:1;margin:0}
+.status-badge{
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:6px;
+  font-size:0.85rem;
+  font-weight:600;
+  margin-top:12px;
+}
+.status-success{background:rgba(16,185,129,0.1);color:var(--success);border:1px solid var(--success)}
+.status-error{background:rgba(239,68,68,0.1);color:var(--danger);border:1px solid var(--danger)}
+.registration-details{
+  margin-top:20px;
+  padding:20px;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+}
+.detail-row{
+  display:flex;
+  justify-content:space-between;
+  padding:12px 0;
+  border-bottom:1px solid var(--border);
+}
+.detail-row:last-child{border-bottom:none}
+.detail-label{font-weight:600;color:var(--text-muted)}
+.detail-value{font-weight:600;color:var(--text)}
+
+.admin-controls{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:12px;
+  margin-bottom:20px;
+}
+.stat-card{
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:20px;
+  text-align:center;
+}
+.stat-card .num{
+  font-size:2rem;
+  font-weight:800;
+  color:var(--accent);
+}
+.stat-card .label{
+  font-size:0.9rem;
+  color:var(--text-muted);
+  margin-top:4px;
+}
+.table-container{
+  overflow-x:auto;
+  margin-top:20px;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+  overflow:hidden;
+}
+th,td{
+  padding:12px 16px;
+  text-align:left;
+  border-bottom:1px solid var(--border);
+}
+th{
+  background:var(--surface);
+  font-weight:600;
+  color:var(--text);
+}
+tr:last-child td{border-bottom:none}
+tr:hover{background:var(--surface)}
+.action-btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn-sm{
+  padding:6px 12px;
+  font-size:0.85rem;
+  min-width:auto;
+  width:auto;
+}
+
+.qr-display{
+  text-align:center;
+  padding:20px;
+  margin:20px 0;
+}
+.qr-code{
+  display:inline-block;
+  padding:20px;
+  background:#fff;
+  border-radius:12px;
+  margin:16px 0;
+}
+.registration-code{
+  font-size:2rem;
+  font-weight:800;
+  color:var(--accent);
+  letter-spacing:4px;
+  margin:16px 0;
+  font-family:monospace;
+}
+
+@media (max-width:768px){
+  .nav{flex-wrap:wrap;padding:12px 16px}
+  .nav-links{order:3;width:100%;margin-top:8px;justify-content:flex-start}
+  .hero h1{font-size:2rem}
+  .countdown{grid-template-columns:repeat(2,1fr);gap:12px}
+  .unit{padding:16px}
+  .unit .num{font-size:2rem}
+  .schedule-item{grid-template-columns:1fr;gap:8px}
+  .countdown-event{width:fit-content}
+  .btn-group{flex-direction:column}
+  .btn{width:100%;justify-content:center}
+  .section{padding:24px 20px}
+  .popup{padding:24px}
+  .check-in-code{flex-direction:column}
+  .check-in-code input{width:100%}
+  .admin-controls{grid-template-columns:1fr}
+  .feature-grid{grid-template-columns:1fr}
+  .welcome-content h1{font-size:1.8rem}
+}
+
+@media (max-width:480px){
+  .brand-text{font-size:0.9rem}
+  .logo{width:36px;height:36px;font-size:1rem}
+  .detail-row{flex-direction:column;gap:4px}
+}
 </style>
 </head>
-<body>
-<div class="nav">
-<div class="brand"><div class="logo-mark">ST</div><div style="min-width:140px">Scientrix — Little Scholars Academy</div></div>
-<nav style="margin-left:12px;display:flex;gap:6px;align-items:center">
-<a href="#about">Home</a>
-<a href="#rules">Rules</a>
-<a href="#schedule">Schedule</a>
-<a href="#contact">Contact</a>
-<a class="primary" href="#register">Register</a>
-</nav>
+<body data-theme="dark">
+
+<div class="topbar">
+  <nav class="nav">
+    <div class="nav-left">
+      <div class="logo">ST</div>
+      <div class="brand-text">Scientrix — LSA</div>
+    </div>
+    <div class="nav-links">
+      <a href="#about">Home</a>
+      <a href="#rules">Rules</a>
+      <a href="#schedule">Schedule</a>
+      <a href="#checkin">Check-in</a>
+      <a href="#contact">Contact</a>
+      <a href="#" class="btn-primary" onclick="event.preventDefault();showPopup('register-popup')">Register</a>
+    </div>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
+      <span id="theme-icon">🌙</span>
+    </button>
+  </nav>
 </div>
 
-<main class="wrap">
-<section id="about" class="glass reveal">
-<h2 class="eyebrow">Welcome to Scientrix</h2>
-<h1>Sustainable Futures — Event Rules & Info</h1>
-<p class="lead">Organized by <strong>Little Scholars' Academy</strong>. Explore the detailed rules, schedule, and contact information for all participants.And countdowns for every event.</p>
-<div class="badge">Theme: Sustainable Futures</div>
-<div class="countdown" id="main-countdown">
-<div class="unit"><div class="num" id="days">0</div><div class="lbl">Days</div></div>
-<div class="unit"><div class="num" id="hours">0</div><div class="lbl">Hours</div></div>
-<div class="unit"><div class="num" id="minutes">0</div><div class="lbl">Minutes</div></div>
-<div class="unit"><div class="num" id="seconds">0</div><div class="lbl">Seconds</div></div>
-</div>
-</section>
+<main class="container">
+  <section id="about" class="section hero">
+    <div class="eyebrow">Welcome to Scientrix</div>
+    <h1>Sustainable Futures</h1>
+    <p class="lead">Organized by <strong>Little Scholars' Academy</strong>. A science exhibition focused on innovation, sustainability, and practical solutions for tomorrow's challenges.</p>
+    <span class="badge">Theme: Sustainable Futures</span>
+    
+    <div class="countdown" id="main-countdown">
+      <div class="unit"><div class="num" id="days">0</div><div class="lbl">Days</div></div>
+      <div class="unit"><div class="num" id="hours">0</div><div class="lbl">Hours</div></div>
+      <div class="unit"><div class="num" id="minutes">0</div><div class="lbl">Minutes</div></div>
+      <div class="unit"><div class="num" id="seconds">0</div><div class="lbl">Seconds</div></div>
+    </div>
+  </section>
 
-<section id="rules" class="glass reveal">
-<h2>Rules & Regulations</h2>
-<ul class="rules-list">
-<li><strong>Eligibility:</strong> Participation is open to students enrolled in recognized schools. Students can participate individually or in teams of up to 3 members. Each team/member can register only one project.</li>
-<li><strong>Registration:</strong> All participants must complete the registration form with accurate details. Registration is confirmed only after receiving the acknowledgement by filling the register form in the website. Last date for registration will be strictly followed; late entries will not be entertained.</li>
-<li><strong>Project Guidelines:</strong> Projects must align with the theme: “Sustainable Futures”. Originality is mandatory. Projects can be in any branch of science or technology. The projects should be compulsorily working. Safety protocols must be followed.</li>
-<li><strong>Judging Criteria:</strong> Projects will be evaluated on originality and creativity, scientific knowledge and accuracy, presentation and clarity, relevance to the theme, practicality and applicability.</li>
-<li><strong>Conduct:</strong> Participants must behave respectfully. Misconduct including cheating or misrepresentation may lead to disqualification. Participants must adhere to timelines and schedules.</li>
-<li><strong>Awards & Recognition:</strong> Certificates will be provided to all registered participants. Prizes for winners in each category. Winning projects may be showcased on official Scientrix platforms and social media.</li>
-<li><strong>Miscellaneous:</strong> Organizers reserve the right to make changes in rules or judging criteria at any time. Judges’ decisions are final. Any disputes will be resolved by the Scientrix organizing committee.</li>
-</ul>
-</section>
-  <section id="schedule" class="glass reveal">
+  <section id="rules" class="section">
+    <h2>Rules & Regulations</h2>
+    <ul class="rules-list">
+      <li><strong>Eligibility:</strong> Open to students in recognized schools. Teams of up to 3 members. One project per team/individual.</li>
+      <li><strong>Registration:</strong> Complete registration form with accurate details. Confirmation upon form submission. Strict deadline enforcement.</li>
+      <li><strong>Project Guidelines:</strong> Must align with "Sustainable Futures" theme. Original work only. Any science/tech branch. Must be working model. Safety protocols mandatory.</li>
+      <li><strong>Judging Criteria:</strong> Evaluated on originality, scientific accuracy, presentation clarity, theme relevance, and practical applicability.</li>
+      <li><strong>Conduct:</strong> Respectful behavior required. Cheating/misrepresentation leads to disqualification. Adhere to all timelines.</li>
+      <li><strong>Awards:</strong> Certificates for all participants. Category prizes. Winning projects featured on official platforms.</li>
+      <li><strong>Miscellaneous:</strong> Organizers reserve right to modify rules. Judges' decisions are final.</li>
+    </ul>
+  </section>
+
+  <section id="schedule" class="section">
     <h2>Event Schedule</h2>
-    <p class="muted">All times are on Nov 11, 2025</p>
+    <p style="color:var(--text-muted);margin-bottom:16px">November 11, 2025</p>
 
     <div class="schedule">
       <div class="schedule-item" data-time="2025-11-11T10:00:00">
@@ -246,247 +554,681 @@ footer{margin-top:40px;text-align:center;color:var(--muted);font-size:0.9rem}
         <div class="desc">Reporting & Registration</div>
         <div class="countdown-event"></div>
       </div>
-
       <div class="schedule-item" data-time="2025-11-11T10:30:00">
         <div class="time">10:30–11:00</div>
         <div class="desc">Inauguration Ceremony</div>
         <div class="countdown-event"></div>
       </div>
-
       <div class="schedule-item" data-time="2025-11-11T11:00:00">
         <div class="time">11:00–12:15</div>
         <div class="desc">Project Exhibition — Round 1</div>
         <div class="countdown-event"></div>
       </div>
-
       <div class="schedule-item" data-time="2025-11-11T12:15:00">
         <div class="time">12:15–12:45</div>
         <div class="desc">Interactive Science Activity / Quiz</div>
         <div class="countdown-event"></div>
       </div>
-
       <div class="schedule-item" data-time="2025-11-11T12:45:00">
-        <div class="time">12:45–01:15</div>
+        <div class="time">12:45–13:15</div>
         <div class="desc">Lunch Break</div>
         <div class="countdown-event"></div>
       </div>
-
-      <div class="schedule-item" data-time="2025-11-11T01:15:00">
-        <div class="time">01:15–02:30</div>
-        <div class="desc">Project Exhibition — Round 2 / Demonstrations</div>
+      <div class="schedule-item" data-time="2025-11-11T13:15:00">
+        <div class="time">13:15–14:30</div>
+        <div class="desc">Project Exhibition — Round 2</div>
         <div class="countdown-event"></div>
       </div>
-
-      <div class="schedule-item" data-time="2025-11-11T02:30:00">
-        <div class="time">02:30–03:00</div>
+      <div class="schedule-item" data-time="2025-11-11T14:30:00">
+        <div class="time">14:30–15:00</div>
         <div class="desc">Workshop / Special Session</div>
         <div class="countdown-event"></div>
       </div>
-
-      <div class="schedule-item" data-time="2025-11-11T03:00:00">
-        <div class="time">03:00–03:30</div>
+      <div class="schedule-item" data-time="2025-11-11T15:00:00">
+        <div class="time">15:00–15:30</div>
         <div class="desc">Judges Deliberation</div>
         <div class="countdown-event"></div>
       </div>
-
-      <div class="schedule-item" data-time="2025-11-11T03:30:00">
-        <div class="time">03:30–04:00</div>
-        <div class="desc">Prize Distribution & Closing Ceremony</div>
+      <div class="schedule-item" data-time="2025-11-11T15:30:00">
+        <div class="time">15:30–16:00</div>
+        <div class="desc">Prize Distribution & Closing</div>
         <div class="countdown-event"></div>
       </div>
     </div>
 
-
-    <div class="download-buttons">
-      <a href="https://drive.google.com/file/d/18xUeHWsEmAVexVLMnTDXAx1iwAg_vR0r/view?usp=sharing" download class="btn-download">Download Schedule</a>
-      <a href="https://drive.google.com/file/d/1ZHRYNJwWCZHgIf6_9UiUHvlz52RkAxza/view?usp=sharing" download class="btn-download">Download Rules</a>
+    <div class="btn-group">
+      <a href="https://drive.google.com/file/d/18xUeHWsEmAVexVLMnTDXAx1iwAg_vR0r/view?usp=sharing" class="btn">📄 Download Schedule</a>
+      <a href="https://drive.google.com/file/d/1ZHRYNJwWCZHgIf6_9UiUHvlz52RkAxza/view?usp=sharing" class="btn">📋 Download Rules</a>
     </div>
   </section>
 
-  <style>
-  .download-buttons {
-    margin-top: 25px;
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
+  <section id="checkin" class="section">
+    <h2>Event Check-in</h2>
+    <p class="lead">Enter your registration code to check-in or view your registration details.</p>
+    
+    <div class="check-in-code">
+      <input type="text" id="checkin-code" placeholder="Enter Registration Code (e.g., ST2025-ABC123)" maxlength="15">
+      <button class="btn" onclick="checkIn()">🔍 Check-in</button>
+    </div>
+    
+    <div id="checkin-result"></div>
+  </section>
 
-  .btn-download {
-    padding: 12px 28px;
-    background: rgba(0, 255, 136, 0.8);
-    color: #000;
-    font-weight: 600;
-    font-size: 16px;
-    border-radius: 12px;
-    text-decoration: none;
-    border: 2px solid rgba(0, 255, 136, 0.8);
-    transition: all 0.3s ease;
-    backdrop-filter: blur(6px);
-  }
+  <section id="contact" class="section">
+    <h2>Contact Information</h2>
+    <div class="contact-grid">
+      <div class="contact-item">
+        <h3>Event Queries</h3>
+        <a href="https://wa.me/+919480172376" class="contact-btn">💬 Pranavkumar Math<br>+91 94801 72376</a>
+      </div>
+      <div class="contact-item">
+        <h3>Website Support</h3>
+        <a href="https://wa.me/+918217575558" class="contact-btn">💬 Aayush Patil<br>+91 8217575558</a>
+      </div>
+      <div class="contact-item">
+        <h3>WhatsApp Group</h3>
+        <a href="https://chat.whatsapp.com/Gv28uUu1VCDBenwCiwcHjG" class="contact-btn btn-success">👥 Join Group</a>
+      </div>
+    </div>
+    <div class="note">All confirmations should be sent to <strong>Pranavkumar Math (+91 9480172376)</strong></div>
+  </section>
 
-  .btn-download:hover {
-    background: rgba(0, 255, 136, 1);
-    color: #fff;
-    border: 2px solid rgba(0, 255, 136, 1);
-    transform: scale(1.05);
-  }
+  <section id="admin" class="section" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+      <h2 style="margin:0">Admin Panel</h2>
+      <button class="btn btn-cancel btn-sm" onclick="logoutAdmin()">Logout</button>
+    </div>
+    
+    <div class="admin-controls">
+      <div class="stat-card">
+        <div class="num" id="total-registrations">0</div>
+        <div class="label">Total Registrations</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="checked-in">0</div>
+        <div class="label">Checked In</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="pending-checkin">0</div>
+        <div class="label">Pending Check-in</div>
+      </div>
+    </div>
 
-  /* Stack download buttons on small screens */
-  @media (max-width: 560px) {
-    .download-buttons {
-      flex-direction: column;
-      gap: 12px;
-    }
-    .btn-download {
-      width: 100%;
-      text-align: center;
-    }
-  }
-  </style>
+    <div class="btn-group">
+      <button class="btn" onclick="exportCSV()">📥 Export Data (CSV)</button>
+      <button class="btn btn-success" onclick="document.getElementById('import-csv').click()">📤 Import CSV</button>
+      <input type="file" id="import-csv" accept=".csv" style="display:none" onchange="importCSV(event)">
+    </div>
 
-
-<section id="contact" class="glass reveal">
-<h2>Contact For Any Queries</h2>
-<div class="row contact">
-<a href="https://wa.me/+919480172376" class="wa-btn">Pranavkumar Math: +91 94801 72376</a>
-<h2>Contact For Website Related Info</h2>
-<a href="https://wa.me/+918217575558" class="wa-btn">Aayush Patil: 8217575558</a>
-<h2>Join The Whatsapp Group Below</h2>
-<a href="https://chat.whatsapp.com/Gv28uUu1VCDBenwCiwcHjG" class="wa-btn group-btn">WHATSAPP GROUP</a>
-</div>
-<div class="confirm-note">All confirmations should be sent to <strong>Pranavkumar Math (+91 9480172376)</strong>.</div>
-</section>
-
-<footer>© 2025 Scientrix — Little Scholars Academy. All rights reserved.</footer>
+    <div class="table-container">
+      <table id="admin-table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>School</th>
+            <th>Team Lead</th>
+            <th>Contact</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="admin-tbody"></tbody>
+      </table>
+    </div>
+  </section>
 </main>
+
+<footer>
+  <p>© 2025 Scientrix — Little Scholars Academy. All rights reserved.</p>
+  <p style="margin-top:8px;font-size:0.85rem">
+    <a href="#" onclick="showAdminLogin();return false" style="color:var(--text-muted);cursor:pointer">Admin</a>
+  </p>
+</footer>
 
 <div id="overlay"></div>
 
-  <div id="register-popup" class="glass" style="
-    display:none;
-    position:fixed;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%) scale(0.8);
-    z-index:1000;
-    max-width:550px;
-    width:90%;
-    max-height:85vh; /* Limits height to 85% of screen */
-    overflow-y:auto; /* Enables scrolling if content exceeds height */
-    padding:32px;
-    opacity:0;
-    transition:all 0.3s ease;
-    border-radius:16px;
-    scrollbar-width:thin;
-    scrollbar-color:#00ff99 #000;
-  ">
-    <h2>Event Registration</h2>
-    <p class="lead">Fill in all details carefully. We’ll contact you via WhatsApp for confirmation.</p>
-
-    <form id="register-form">
-      <input type="text" name="school_name" placeholder="School Name" required>
-
-      <input type="text" name="participant1" placeholder="Participant 1 (Full Name)" required>
-      <input type="text" name="participant2" placeholder="Participant 2 (Full Name)" required>
-      <input type="text" name="participant3" placeholder="Participant 3 (Optional)">
-
-      <input type="text" name="registrant_name" placeholder="Registrant Name" required>
-      <input type="tel" name="registrant_contact" placeholder="Registrant Contact Number" required>
-      <input type="tel" name="participant_contact" placeholder="Participant Contact Number (Any one)" required>
-
-      <input type="email" name="email1" placeholder="Email ID (Participant 1)" required>
-      <input type="email" name="email2" placeholder="Email ID (Participant 2)">
-      <input type="email" name="email3" placeholder="Email ID (Participant 3)">
-
-      <button type="submit" class="wa-btn" style="width:100%;margin-top:16px;">Submit & WhatsApp</button>
-      <button type="button" id="close-register" class="wa-btn" style="width:100%;margin-top:8px;background:linear-gradient(90deg,#ff4d4d,#ff1a1a);">Cancel</button>
-    </form>
+<div id="welcome-modal" class="popup">
+  <div class="welcome-content">
+    <div class="welcome-icon">🎉</div>
+    <h1>You're Invited!</h1>
+    <p class="lead">Welcome to Scientrix — Sustainable Futures 2025</p>
+    
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="icon">📝</div>
+        <h3>Easy Registration</h3>
+        <p>Register your team and get instant confirmation</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🎫</div>
+        <h3>Unique Code</h3>
+        <p>Receive a unique registration code for check-in</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">✅</div>
+        <h3>Quick Check-in</h3>
+        <p>Fast check-in on event day with your code</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📊</div>
+        <h3>Track Progress</h3>
+        <p>View schedule and track your registration</p>
+      </div>
+    </div>
+    
+    <button class="btn btn-success" onclick="closeWelcome()">Get Started →</button>
+    <p style="margin-top:16px;font-size:0.85rem;color:var(--text-muted)">
+      <label style="cursor:pointer">
+        <input type="checkbox" id="dont-show-again" style="width:auto;margin:0 4px 0 0">
+        Don't show this again
+      </label>
+    </p>
   </div>
+</div>
 
+<div id="register-popup" class="popup">
+  <h2>Event Registration</h2>
+  <p class="lead">Fill in all details carefully. You'll receive a unique registration code.</p>
+  
+  <form id="register-form" onsubmit="handleRegistration(event)">
+    <input type="text" name="school_name" placeholder="School Name" required>
+    <input type="text" name="participant1" placeholder="Team Lead / Participant 1 (Full Name)" required>
+    <input type="text" name="participant2" placeholder="Participant 2 (Full Name)">
+    <input type="text" name="participant3" placeholder="Participant 3 (Optional)">
+    <input type="text" name="project_title" placeholder="Project Title" required>
+    <select name="category" required>
+      <option value="">Select Category</option>
+      <option value="junior">Junior (Grades 6-8)</option>
+      <option value="senior">Senior (Grades 9-12)</option>
+    </select>
+    <input type="text" name="registrant_name" placeholder="Registrant Name" required>
+    <input type="tel" name="registrant_contact" placeholder="Registrant Contact Number" required>
+    <input type="tel" name="participant_contact" placeholder="Team Lead Contact Number" required>
+    <input type="email" name="email" placeholder="Email Address" required>
+    <textarea name="project_desc" placeholder="Brief Project Description (Optional)" rows="3"></textarea>
+    
+    <button type="submit" class="btn btn-success">Submit Registration</button>
+    <button type="button" class="btn btn-cancel" onclick="closePopup('register-popup')">Cancel</button>
+  </form>
+</div>
 
+<div id="success-popup" class="popup">
+  <div class="qr-display">
+    <h2>🎉 Registration Successful!</h2>
+    <p class="lead">Your unique registration code:</p>
+    <div class="registration-code" id="generated-code">ST2025-XXXXXX</div>
+    <div class="qr-code" id="qr-container">
+      <canvas id="qr-canvas" width="200" height="200"></canvas>
+    </div>
+    <p style="color:var(--text-muted);margin:16px 0">
+      Save this code! You'll need it for check-in on event day.
+    </p>
+    <div class="btn-group">
+      <button class="btn" onclick="downloadQR()">💾 Download QR Code</button>
+      <button class="btn" onclick="shareCode()">📱 Share via WhatsApp</button>
+      <button class="btn btn-success" onclick="closePopup('success-popup')">Done</button>
+    </div>
+  </div>
+</div>
+
+<div id="admin-login-popup" class="popup">
+  <h2>Admin Login</h2>
+  <p class="lead">Enter admin credentials to access the dashboard.</p>
+  <input type="password" id="admin-password" placeholder="Admin Password">
+  <button class="btn btn-success" onclick="loginAdmin()">Login</button>
+  <button class="btn btn-cancel" onclick="closePopup('admin-login-popup')">Cancel</button>
+</div>
 
 <script>
-// Main countdown to event start
+// Registration database
+let registrations = [];
+const ADMIN_PASSWORD = 'scientrix2025';
+
+// Load data
+function loadData() {
+  const saved = localStorage.getItem('scientrix_registrations');
+  if (saved) {
+    try {
+      registrations = JSON.parse(saved);
+    } catch(e) {
+      registrations = [];
+    }
+  }
+}
+
+// Save data
+function saveData() {
+  localStorage.setItem('scientrix_registrations', JSON.stringify(registrations));
+  updateAdminStats();
+}
+
+// Generate unique code
+function generateCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = 'ST2025-';
+  for(let i = 0; i < 6; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  if(registrations.some(r => r.code === code)) {
+    return generateCode();
+  }
+  return code;
+}
+
+// Generate QR code
+function generateQR(text) {
+  const canvas = document.getElementById('qr-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = 200;
+  canvas.height = 200;
+  
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, 200, 200);
+  ctx.fillStyle = '#000';
+  ctx.font = 'bold 16px monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, 100, 100);
+  
+  ctx.strokeStyle = '#000';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(0, 0, 200, 200);
+}
+
+// Theme toggle
+const themeToggle = document.getElementById('theme-toggle');
+const themeIcon = document.getElementById('theme-icon');
+const body = document.body;
+
+const savedTheme = localStorage.getItem('theme') || 'dark';
+body.setAttribute('data-theme', savedTheme);
+themeIcon.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+
+themeToggle.addEventListener('click', () => {
+  const currentTheme = body.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  body.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  themeIcon.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+});
+
+// Main countdown
 const eventStart = new Date('2025-11-11T08:00:00');
 function updateMainCountdown(){
   const now = new Date();
-  let diff = Math.max(0,eventStart - now);
+  let diff = Math.max(0, eventStart - now);
   const days = Math.floor(diff/86400000);
   diff %= 86400000;
   const hours = Math.floor(diff/3600000);
-  diff %=3600000;
+  diff %= 3600000;
   const mins = Math.floor(diff/60000);
-  const secs = Math.floor(diff/1000)%60;
-  document.getElementById('days').textContent=days;
-  document.getElementById('hours').textContent=hours;
-  document.getElementById('minutes').textContent=mins;
-  document.getElementById('seconds').textContent=secs;
+  const secs = Math.floor(diff/1000) % 60;
+  document.getElementById('days').textContent = days;
+  document.getElementById('hours').textContent = hours;
+  document.getElementById('minutes').textContent = mins;
+  document.getElementById('seconds').textContent = secs;
 }
-setInterval(updateMainCountdown,1000); 
+setInterval(updateMainCountdown, 1000);
 updateMainCountdown();
 
 // Schedule countdowns
 function updateEventCountdowns(){
-  const now=new Date();
-  document.querySelectorAll('.schedule-item').forEach(item=>{
-    const startTime=new Date(item.dataset.time);
-    const diff=Math.max(0,startTime-now);
-    const hrs=Math.floor(diff/3600000);
-    const mins=Math.floor((diff%3600000)/60000);
-    const secs=Math.floor((diff%60000)/1000);
-    const el=item.querySelector('.countdown-event');
-    if(diff>0){
-      el.textContent=`Starts in ${hrs}h ${mins}m ${secs}s`;
-    } else { 
-      el.textContent='Ongoing/Finished'; 
+  const now = new Date();
+  document.querySelectorAll('.schedule-item').forEach(item => {
+    const startTime = new Date(item.dataset.time);
+    const diff = Math.max(0, startTime - now);
+    const hrs = Math.floor(diff/3600000);
+    const mins = Math.floor((diff%3600000)/60000);
+    const secs = Math.floor((diff%60000)/1000);
+    const el = item.querySelector('.countdown-event');
+    if(diff > 0){
+      el.textContent = `${hrs}h ${mins}m ${secs}s`;
+    } else {
+      el.textContent = 'Completed';
     }
   });
 }
-setInterval(updateEventCountdowns,1000); 
+setInterval(updateEventCountdowns, 1000);
 updateEventCountdowns();
 
-// Register popup open/close
-const popup = document.getElementById('register-popup');
+// Popup management
 const overlay = document.getElementById('overlay');
 
-document.querySelector('.nav a.primary').addEventListener('click', function(e){
-  e.preventDefault();
+function showPopup(popupId) {
+  const popup = document.getElementById(popupId);
   overlay.style.display = 'block';
-  setTimeout(()=> overlay.style.opacity = 1, 10);
   popup.style.display = 'block';
-  setTimeout(()=>{
-    popup.style.opacity = 1;
+  setTimeout(() => {
+    overlay.style.opacity = '1';
+    popup.style.opacity = '1';
     popup.style.transform = 'translate(-50%,-50%) scale(1)';
   }, 10);
-});
+}
 
-document.getElementById('close-register').addEventListener('click', function(){
-  popup.style.opacity = 0;
-  popup.style.transform = 'translate(-50%,-50%) scale(0.8)';
-  overlay.style.opacity = 0;
-  setTimeout(()=>{
+function closePopup(popupId) {
+  const popup = document.getElementById(popupId);
+  popup.style.opacity = '0';
+  popup.style.transform = 'translate(-50%,-50%) scale(0.95)';
+  overlay.style.opacity = '0';
+  setTimeout(() => {
     popup.style.display = 'none';
     overlay.style.display = 'none';
   }, 300);
+}
+
+// Welcome modal
+function checkWelcome() {
+  const dontShow = localStorage.getItem('scientrix_welcome_shown');
+  if (!dontShow) {
+    showPopup('welcome-modal');
+  }
+}
+
+function closeWelcome() {
+  const dontShow = document.getElementById('dont-show-again').checked;
+  if (dontShow) {
+    localStorage.setItem('scientrix_welcome_shown', 'true');
+  }
+  closePopup('welcome-modal');
+}
+
+// Registration
+function handleRegistration(e) {
+  e.preventDefault();
+  const f = e.target;
+  
+  const code = generateCode();
+  const registration = {
+    code: code,
+    school: f.school_name.value,
+    participant1: f.participant1.value,
+    participant2: f.participant2.value || 'N/A',
+    participant3: f.participant3.value || 'N/A',
+    projectTitle: f.project_title.value,
+    category: f.category.value,
+    registrant: f.registrant_name.value,
+    registrantContact: f.registrant_contact.value,
+    participantContact: f.participant_contact.value,
+    email: f.email.value,
+    projectDesc: f.project_desc.value || 'N/A',
+    timestamp: new Date().toISOString(),
+    checkedIn: false,
+    checkinTime: null
+  };
+  
+  registrations.push(registration);
+  saveData();
+  
+  closePopup('register-popup');
+  document.getElementById('generated-code').textContent = code;
+  generateQR(code);
+  showPopup('success-popup');
+  
+  f.reset();
+}
+
+// Check-in
+function checkIn() {
+  const code = document.getElementById('checkin-code').value.trim().toUpperCase();
+  const resultDiv = document.getElementById('checkin-result');
+  
+  if (!code) {
+    resultDiv.innerHTML = '<div class="status-badge status-error">Please enter a registration code</div>';
+    return;
+  }
+  
+  const registration = registrations.find(r => r.code === code);
+  
+  if (!registration) {
+    resultDiv.innerHTML = '<div class="status-badge status-error">❌ Invalid registration code</div>';
+    return;
+  }
+  
+  if (!registration.checkedIn) {
+    registration.checkedIn = true;
+    registration.checkinTime = new Date().toISOString();
+    saveData();
+  }
+  
+  resultDiv.innerHTML = `
+    <div class="status-badge status-success">✅ Valid Registration - ${registration.checkedIn ? 'Checked In' : 'Not Checked In'}</div>
+    <div class="registration-details">
+      <div class="detail-row">
+        <span class="detail-label">Registration Code:</span>
+        <span class="detail-value">${registration.code}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">School:</span>
+        <span class="detail-value">${registration.school}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Team Lead:</span>
+        <span class="detail-value">${registration.participant1}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Team Members:</span>
+        <span class="detail-value">${registration.participant2}, ${registration.participant3}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Project:</span>
+        <span class="detail-value">${registration.projectTitle}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Category:</span>
+        <span class="detail-value">${registration.category.charAt(0).toUpperCase() + registration.category.slice(1)}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Contact:</span>
+        <span class="detail-value">${registration.participantContact}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Check-in Status:</span>
+        <span class="detail-value" style="color:${registration.checkedIn ? 'var(--success)' : 'var(--warning)'}">
+          ${registration.checkedIn ? '✅ Checked In' : '⏳ Pending'}
+        </span>
+      </div>
+      ${registration.checkinTime ? `
+      <div class="detail-row">
+        <span class="detail-label">Check-in Time:</span>
+        <span class="detail-value">${new Date(registration.checkinTime).toLocaleString()}</span>
+      </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+document.getElementById('checkin-code').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') checkIn();
 });
 
-  // WhatsApp submission (fixed)
-  document.getElementById('register-form').addEventListener('submit', function(e){
-    e.preventDefault();
-    const f = e.target;
-    const msg = `*Scientrix Registration*%0A
-  *School:* ${f.school_name.value}%0A
-  *Participant 1:* ${f.participant1.value}%0A
-  *Participant 2:* ${f.participant2.value || 'N/A'}%0A
-  *Participant 3:* ${f.participant3.value || 'N/A'}%0A
-  *Registrant Name:* ${f.registrant_name.value}%0A
-  *Registrant Contact:* ${f.registrant_contact.value}%0A
-  *Participant Contact:* ${f.participant_contact.value}%0A
-  *Emails:*%0A 1️⃣ ${f.email1.value}%0A 2️⃣ ${f.email2.value || 'N/A'}%0A 3️⃣ ${f.email3.value || 'N/A'}`;
+// Share code
+function shareCode() {
+  const code = document.getElementById('generated-code').textContent;
+  const msg = `🎉 Successfully registered for Scientrix 2025!
 
-    const waURL = `https://wa.me/918217575558?text=${encodeURIComponent(msg)}`;
-    window.open(waURL, '_blank');
+📋 Registration Code: ${code}
+
+📅 Event Date: November 11, 2025
+🏫 Venue: Little Scholars' Academy
+
+⚠️ Save this code for check-in on event day!
+
+Theme: Sustainable Futures 🌍`;
+  
+  const waURL = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+  window.open(waURL, '_blank');
+}
+
+// Download QR
+function downloadQR() {
+  const canvas = document.getElementById('qr-canvas');
+  const code = document.getElementById('generated-code').textContent;
+  const link = document.createElement('a');
+  link.download = `scientrix-${code}.png`;
+  link.href = canvas.toDataURL();
+  link.click();
+}
+
+// Admin
+function showAdminLogin() {
+  showPopup('admin-login-popup');
+}
+
+function loginAdmin() {
+  const password = document.getElementById('admin-password').value;
+  if (password === ADMIN_PASSWORD) {
+    closePopup('admin-login-popup');
+    document.getElementById('admin').style.display = 'block';
+    document.getElementById('admin').scrollIntoView({ behavior: 'smooth' });
+    updateAdminTable();
+    updateAdminStats();
+  } else {
+    alert('Incorrect password!');
+  }
+}
+
+function logoutAdmin() {
+  document.getElementById('admin').style.display = 'none';
+  document.getElementById('admin-password').value = '';
+}
+
+function updateAdminStats() {
+  const total = registrations.length;
+  const checkedIn = registrations.filter(r => r.checkedIn).length;
+  const pending = total - checkedIn;
+  
+  document.getElementById('total-registrations').textContent = total;
+  document.getElementById('checked-in').textContent = checkedIn;
+  document.getElementById('pending-checkin').textContent = pending;
+}
+
+function updateAdminTable() {
+  const tbody = document.getElementById('admin-tbody');
+  tbody.innerHTML = '';
+  
+  registrations.forEach((reg, idx) => {
+    const row = tbody.insertRow();
+    row.innerHTML = `
+      <td><strong>${reg.code}</strong></td>
+      <td>${reg.school}</td>
+      <td>${reg.participant1}</td>
+      <td>${reg.participantContact}</td>
+      <td><span class="status-badge ${reg.checkedIn ? 'status-success' : 'status-error'}" style="display:inline-block">
+        ${reg.checkedIn ? '✅ Checked In' : '⏳ Pending'}
+      </span></td>
+      <td class="action-btns">
+        <button class="btn btn-sm" onclick="viewDetails(${idx})">View</button>
+        <button class="btn btn-sm btn-cancel" onclick="deleteRegistration(${idx})">Delete</button>
+      </td>
+    `;
   });
+}
+
+function viewDetails(idx) {
+  const reg = registrations[idx];
+  alert(`Registration Details:
+
+Code: ${reg.code}
+School: ${reg.school}
+Team Lead: ${reg.participant1}
+Members: ${reg.participant2}, ${reg.participant3}
+Project: ${reg.projectTitle}
+Category: ${reg.category}
+Registrant: ${reg.registrant}
+Contact: ${reg.participantContact}
+Email: ${reg.email}
+Description: ${reg.projectDesc}
+Registered: ${new Date(reg.timestamp).toLocaleString()}
+Checked In: ${reg.checkedIn ? 'Yes' : 'No'}
+${reg.checkinTime ? 'Check-in Time: ' + new Date(reg.checkinTime).toLocaleString() : ''}`);
+}
+
+function deleteRegistration(idx) {
+  if (confirm('Are you sure you want to delete this registration?')) {
+    registrations.splice(idx, 1);
+    saveData();
+    updateAdminTable();
+  }
+}
+
+// CSV Export
+function exportCSV() {
+  const headers = ['Code', 'School', 'Team Lead', 'Member 2', 'Member 3', 'Project Title', 
+                   'Category', 'Registrant', 'Registrant Contact', 'Participant Contact', 
+                   'Email', 'Description', 'Registered', 'Checked In', 'Checkin Time'];
+  
+  const rows = registrations.map(r => [
+    r.code, r.school, r.participant1, r.participant2, r.participant3, r.projectTitle,
+    r.category, r.registrant, r.registrantContact, r.participantContact, r.email,
+    r.projectDesc, r.timestamp, r.checkedIn ? 'Yes' : 'No', r.checkinTime || 'N/A'
+  ]);
+  
+  const csv = [headers, ...rows].map(row => 
+    row.map(cell => `"${cell}"`).join(',')
+  ).join('\n');
+  
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `scientrix-registrations-${new Date().toISOString().split('T')[0]}.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+// CSV Import
+function importCSV(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  Papa.parse(file, {
+    header: true,
+    skipEmptyLines: true,
+    complete: function(results) {
+      const imported = results.data.map(row => ({
+        code: row.Code || generateCode(),
+        school: row.School || '',
+        participant1: row['Team Lead'] || '',
+        participant2: row['Member 2'] || 'N/A',
+        participant3: row['Member 3'] || 'N/A',
+        projectTitle: row['Project Title'] || '',
+        category: row.Category || 'senior',
+        registrant: row.Registrant || '',
+        registrantContact: row['Registrant Contact'] || '',
+        participantContact: row['Participant Contact'] || '',
+        email: row.Email || '',
+        projectDesc: row.Description || 'N/A',
+        timestamp: row.Registered || new Date().toISOString(),
+        checkedIn: row['Checked In'] === 'Yes',
+        checkinTime: row['Checkin Time'] !== 'N/A' ? row['Checkin Time'] : null
+      }));
+      
+      registrations = [...registrations, ...imported];
+      saveData();
+      updateAdminTable();
+      alert(`Successfully imported ${imported.length} registrations!`);
+    },
+    error: function(error) {
+      alert('Error importing CSV: ' + error.message);
+    }
+  });
+  
+  event.target.value = '';
+}
+
+// Click outside to close
+overlay.addEventListener('click', () => {
+  document.querySelectorAll('.popup').forEach(popup => {
+    if (popup.style.display === 'block') {
+      closePopup(popup.id);
+    }
+  });
+});
+
+// Initialize
+loadData();
+setTimeout(checkWelcome, 500);
 </script>
 </body>
 </html>
+  
