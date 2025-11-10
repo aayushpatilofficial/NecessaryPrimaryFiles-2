@@ -55,7 +55,7 @@
       <li><strong>Project Guidelines:</strong> Must align with "Sustainable Futures" theme. Original work only. Any science/tech branch. Must be working model. Safety protocols mandatory.</li>
       <li><strong>Judging Criteria:</strong> Evaluated on originality, scientific accuracy, presentation clarity, theme relevance, and practical applicability.</li>
       <li><strong>Conduct:</strong> Respectful behavior required. Cheating/misrepresentation leads to disqualification. Adhere to all timelines.</li>
-      <li><strong>Awards:</strong> Certificates for all participants. Category prizes. Winning projects featured on official platforms.</li>
+      <li><strong>Awards:</strong> Certificates for all participants.Winning projects featured on official platforms.</li>
       <li><strong>Miscellaneous:</strong> Organizers reserve right to modify rules. Judges' decisions are final.</li>
     </ul>
   </section>
@@ -245,8 +245,8 @@
 
 <script>
 // ⚠️ REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT URL
-const SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbxnExTLTRh6m5oXTX0evZZcgF7l3_vExGmdivZHCL1CkKlBfLFk5EW_SoqKqqboqTYS/exec';
-const ADMIN_PASSWORD = 'scientrix2025';
+const SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbxfKGDPRLgtPByDfGj33BLNbVYDTVwTTKPUIjhva0GNZjf3EBzp6XpZW4ZGTkKaXOf46A/exec';
+const ADMIN_PASSWORD = 'Aayush@2011';
 
 function generateCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -470,8 +470,14 @@ async function checkIn() {
       return;
     }
     
+    // Show details with check-in button if not checked in
+    const checkInButtonHTML = !data.checkedIn ? 
+      `<div class="btn-group" style="margin-top:20px">
+        <button class="btn btn-success" onclick="performCheckIn('${data.code}')">✅ Check-in Now</button>
+      </div>` : '';
+    
     resultDiv.innerHTML = `
-      <div class="status-badge status-success">✅ Valid Registration - ${data.checkedIn ? 'Checked In' : 'Not Checked In'}</div>
+      <div class="status-badge status-success">✅ Valid Registration - ${data.checkedIn ? 'Already Checked In' : 'Ready to Check-in'}</div>
       <div class="registration-details">
         <div class="detail-row">
           <span class="detail-label">Registration Code:</span>
@@ -487,7 +493,7 @@ async function checkIn() {
         </div>
         <div class="detail-row">
           <span class="detail-label">Team Members:</span>
-          <span class="detail-value">${data.participant2}, ${data.participant3}</span>
+          <span class="detail-value">${data.participant2 !== 'N/A' ? data.participant2 : ''} ${data.participant3 !== 'N/A' ? ', ' + data.participant3 : ''}</span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Project:</span>
@@ -515,12 +521,12 @@ async function checkIn() {
         </div>
         <div class="detail-row">
           <span class="detail-label">Project Description:</span>
-          <span class="detail-value">${data.projectDesc}</span>
+          <span class="detail-value">${data.projectDesc !== 'N/A' ? data.projectDesc : 'Not provided'}</span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Check-in Status:</span>
           <span class="detail-value" style="color:${data.checkedIn ? 'var(--success)' : 'var(--warning)'}">
-            ${data.checkedIn ? '✅ Checked In' : '⏳ Pending'}
+            ${data.checkedIn ? '✅ Checked In' : '⏳ Pending Check-in'}
           </span>
         </div>
         ${data.checkinTime ? `
@@ -530,10 +536,46 @@ async function checkIn() {
         </div>
         ` : ''}
       </div>
+      ${checkInButtonHTML}
     `;
   } catch (err) {
     console.error('Check-in error:', err);
     resultDiv.innerHTML = '<div class="status-badge status-error">Error: ' + err.message + '</div>';
+  }
+}
+
+async function performCheckIn(code) {
+  if (!confirm(`Confirm check-in for ${code}?`)) return;
+  
+  try {
+    const response = await fetch(SHEETS_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        action: 'toggleCheckIn',
+        code: code,
+        checkedIn: true,
+        checkinTime: new Date().toLocaleString('en-IN', { 
+          dateStyle: 'medium', 
+          timeStyle: 'short',
+          timeZone: 'Asia/Kolkata'
+        })
+      }),
+      redirect: 'follow'
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      alert('✅ Successfully checked in!');
+      // Reload the details
+      document.getElementById('checkin-code').value = code;
+      await checkIn();
+    } else {
+      throw new Error(result.error || 'Check-in failed');
+    }
+  } catch (err) {
+    alert('Error during check-in: ' + err.message);
   }
 }
 
